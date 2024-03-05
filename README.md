@@ -1,7 +1,10 @@
 # Mind Map
 
-Curses tutorial:
+Create a Map Map cli app
 
-- <https://docs.python.org/3/howto/curses.html>
-- <https://www.youtube.com/watch?v=Db4oc8qc9RU&list=PLzMcBGfZo4-n2TONAOImWL4sgZsmyMBc8>
-- <https://www.devdungeon.com/content/curses-programming-python>
+## Next things
+
+- Add better navigation
+- Add text emphasis
+- Add copy, cut and paste
+- Rewrite the whole thing in C++
