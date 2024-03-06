@@ -179,35 +179,6 @@ def select_mode(list_of_actions: list[str], global_dict: dict, keys_path: list[s
 
 
 def main() -> None:
-    # d = {
-    #     "How to start":{
-    #         "Edition Using Keyboard":{
-    #             "Move Between Topics With The Arrows":{},
-    #             "Start Typing to Edit Text":{},
-    #             "Press Ctrl/Meta+Enter to Add Child Topic":{}
-    #         },
-    #         "Edition Using Mouse":{
-    #             "Double Click on a Topic to Edit the Text":{},
-    #             "Double Click on the Canvas to Create Topics":{},
-    #             "Drag and Drop Topics Position":{}
-    #         },
-    #         "Topic Properties":{
-    #             "Multiple Text Styles":{
-    #                 "Color":{},
-    #                 "Styles":{},
-    #                 "Type":{},
-    #             },
-    #             "Different Shapes":{},
-    #             "Add Notes":{},
-    #         },
-    #         "Sharing":{
-    #             "Invite Friends to Collaborate":{},
-    #             "Embed in Blogs":{},
-    #             "Publish your Mind map":{},
-    #         }
-    #     }
-    # }
-    # keys_path = list(d.keys())
     list_of_actions = [
         "Quit program",
         "Add entry",
