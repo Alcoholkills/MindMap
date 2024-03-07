@@ -3,6 +3,7 @@ from rich.console import Console
 from rich.table import Table
 
 
+
 class PRBT_Table():
     def __init__(self, terminal: Console, name: str, header: list[dict], content: list) -> None:
         self.terminal = terminal
@@ -35,11 +36,11 @@ class PRBT_iTable(PRBT_Table):
 
     
     def next(self) -> None:
-        self.index = (self.index + 1) % len(content)
+        self.index = (self.index + 1) % len(self.lines)
     
     def previous(self) -> None:
         if self.index == 0:
-            self.index = len(content) - 1
+            self.index = len(self.lines) - 1
         else:
             self.index -= 1
 
@@ -80,8 +81,8 @@ class PRBT_iTable(PRBT_Table):
         except KeyboardInterrupt:
             return
 
-def tests():
-    def test_1():
+class Tests:
+    def test_1(self):
         console = Console()
         name = "Star Wars Movies"
         header = [
@@ -99,7 +100,7 @@ def tests():
         table = PRBT_Table(terminal=console, name=name, header=header, content=content)
         table.render()
     
-    def test2():
+    def test_2(self):
         console = Console()
         name = "Star Wars Movies"
         header = [
@@ -120,7 +121,7 @@ def tests():
             console.input("Waiting for input")
             table.next()
 
-    def test3():
+    def test_3(self):
         console = Console()
         keyboard = Controller()
         name = "Star Wars Movies"
@@ -142,5 +143,5 @@ def tests():
 
 
 if __name__ == "__main__":
-    pass
+    Tests().test_3()
     

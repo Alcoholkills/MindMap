@@ -6,6 +6,8 @@ import json
 import os
 from tkinter import filedialog
 from threading import Thread
+from rich.tree import Tree
+from rich import print as rprint
 
 
 def editable_input(text: str) -> str:
