@@ -4,7 +4,7 @@ from rich.table import Table
 
 
 class PRBT_Table():
-    def __init__(self, terminal: Console, name: str, header: list, content: list) -> None:
+    def __init__(self, terminal: Console, name: str, header: list[dict], content: list) -> None:
         self.terminal = terminal
         self.name: str = name
         self.header: list = header
@@ -27,9 +27,10 @@ class PRBT_Table():
         self.terminal.print(self.table)
 
 class PRBT_iTable(PRBT_Table):
-    def __init__(self, terminal: Console, name: str, header: list, content: list, keyboard: Controller) -> None:
+    def __init__(self, terminal: Console, name: str, header: list[dict], content: list, keyboard: Controller) -> None:
         super().__init__(terminal, name, header, content)
         self.index = 0
+        self.shift_pressed = False
         self.keyboard = keyboard
 
     
@@ -38,28 +39,46 @@ class PRBT_iTable(PRBT_Table):
     
     def previous(self) -> None:
         if self.index == 0:
-            self.index == len(content) - 1
+            self.index = len(content) - 1
         else:
             self.index -= 1
 
     def render(self) -> None:
-        self.terminal.clear()
         for index, row in enumerate(self.table.rows):
             if index == self.index:
                 row.style = "bold"
             else:
                 row.style = None
+        self.terminal.clear()
         self.terminal.print(self.table)
     
     def on_press(self, key: Key):
-        if key == Key.esc or key.char.lower() in ['q']:
-            return False
-        elif key == Key.tab:
-            if self.keyboard.shift_pressed:
-                self.previous()
-            else:
-                self.next()
-
+        try:
+            if key.char in ['q']:
+                return False
+        except AttributeError:
+            if key == Key.esc:
+                return False
+            elif key == Key.shift:
+                self.shift_pressed = True
+            elif key == Key.tab:
+                if self.shift_pressed:
+                    self.previous()
+                else:
+                    self.next()
+                self.render()
+    
+    def on_release(self, key: Key):
+        if key == Key.shift:
+            self.shift_pressed = False
+    
+    def interactive(self):
+        try:
+            with Listener(on_press=self.on_press, on_release=self.on_release) as listener:
+                self.render()
+                listener.join()
+        except KeyboardInterrupt:
+            return
 
 def tests():
     def test_1():
@@ -101,22 +120,27 @@ def tests():
             console.input("Waiting for input")
             table.next()
 
+    def test3():
+        console = Console()
+        keyboard = Controller()
+        name = "Star Wars Movies"
+        header = [
+            {"header":"Released", "justify":"right", "style":"cyan", "no_wrap":True},
+            {"header":"Title", "style":"magenta"},
+            {"header":"Box Office", "justify":"right", "style":"green"},
+        ]
+        content = [
+            ["Dec 20, 2019", "Star Wars: The Rise of Skywalker", "$952,110,690"],
+            ["May 25, 2018", "Solo: A Star Wars Story", "$393,151,347"],
+            ["Dec 15, 2017", "Star Wars Ep. V111: The Last Jedi", "$1,332,539,889"],
+            ["Dec 16, 2016", "Rogue One: A Star Wars Story", "$1,332,439,889"],
+        ]
+
+        table = PRBT_iTable(terminal=console, name=name, header=header, content=content, keyboard=keyboard)
+        table.interactive()
+
 
 
 if __name__ == "__main__":
-    console = Console()
-    keyboard = Controller()
-    name = "Star Wars Movies"
-    header = [
-        {"header":"Released", "justify":"right", "style":"cyan", "no_wrap":True},
-        {"header":"Title", "style":"magenta"},
-        {"header":"Box Office", "justify":"right", "style":"green"},
-    ]
-    content = [
-        ["Dec 20, 2019", "Star Wars: The Rise of Skywalker", "$952,110,690"],
-        ["May 25, 2018", "Solo: A Star Wars Story", "$393,151,347"],
-        ["Dec 15, 2017", "Star Wars Ep. V111: The Last Jedi", "$1,332,539,889"],
-        ["Dec 16, 2016", "Rogue One: A Star Wars Story", "$1,332,439,889"],
-    ]
-
-    table = PRBT_iTable(terminal=console, name=name, header=header, content=content, keyboard=keyboard)
+    pass
+    
